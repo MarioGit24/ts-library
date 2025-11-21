@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class RealNameTest {
 
-    @ParameterizedTest(name = "Blockera inläst ord: {0}")
+    @ParameterizedTest
     @ValueSource(strings = {
             "användare testord",
             "svordom användare",
@@ -18,6 +18,8 @@ public class RealNameTest {
         boolean result = RealName.validate(name);
         assertThat(result).isFalse();
     }
+
+
 
 
     }

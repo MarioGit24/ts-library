@@ -32,13 +32,11 @@ public final class RealName {
                          new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
 
                 invalidWords.addAll(reader.lines()
-                        .map(String::trim)
-                        .filter(s -> !s.isEmpty())
-                        .map(String::toLowerCase)
+                        .map(String::trim).
+                        filter(s -> !s.isEmpty()).
+                        map(String::toLowerCase)
                         .collect(Collectors.toSet()));
             }
-
-            logger.info("Loaded {} invalid words.", invalidWords.size());
 
         } catch (IOException ex) {
             logger.error("Unable to initialize list of bad words", ex);
