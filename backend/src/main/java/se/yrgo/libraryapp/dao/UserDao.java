@@ -75,6 +75,7 @@ public class UserDao {
         }
     }
 
+
     public boolean isNameAvailable(String name) {
         if (name == null || name.trim().length() < 3) {
             return false;

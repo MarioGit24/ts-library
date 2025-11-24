@@ -50,7 +50,6 @@ public class UserDaoTest {
         assertThat(userDao.getLoginInfo(username)).isEmpty();
     }
 
-
     @Test
     void getExistingUser() throws SQLException {
         final String userId = "1";
@@ -67,6 +66,7 @@ public class UserDaoTest {
         UserDao userDao = new UserDao(ds);
         assertThat(userDao.get(userId)).isEqualTo(Optional.of(expectedUser));
     }
+
     @Test
     void getNonExistingUser() throws SQLException {
         final String username = "testuser";
@@ -78,4 +78,14 @@ public class UserDaoTest {
 
         assertThat(userDao.get(username)).isEmpty();
     }
+
+
+
+
+
+
+
+
+
+
 }
