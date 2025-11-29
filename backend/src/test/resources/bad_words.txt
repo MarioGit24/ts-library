@@ -1,0 +1,8 @@
+
+//forbidden words
+testord
+hemlig
+
+// -> and written in leet
+7e570rd
+h3ml1g
