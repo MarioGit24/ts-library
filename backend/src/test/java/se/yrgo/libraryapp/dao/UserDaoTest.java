@@ -79,6 +79,35 @@ public class UserDaoTest {
         assertThat(userDao.get(username)).isEmpty();
     }
 
+    @Test
+    void throwException() throws SQLException {
+        final String id = "123";
+        when(ds.getConnection()).thenThrow(new SQLException("Databasfel simulering"));
+
+        UserDao userDao = new UserDao(ds);
+
+        Optional<User> result = userDao.get(id);
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void returnEmptyIfUserNotFound() throws SQLException {
+        when(ds.getConnection()).thenReturn(conn);
+        when(conn.createStatement()).thenReturn(stmt);
+        when(stmt.executeQuery(anyString())).thenReturn(rs);
+
+        when(rs.next()).thenReturn(false);
+
+        UserDao userDao = new UserDao(ds);
+        Optional<User> result = userDao.get("user not found");
+
+        assertThat(result).isEmpty();
+
+    }
+
+
+
+
 
 
 

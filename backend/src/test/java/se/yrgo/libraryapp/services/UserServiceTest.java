@@ -34,4 +34,6 @@ public class UserServiceTest {
         assertThat(userService.validate(username,
                 password)).isEqualTo(Optional.of(id));
     }
+
+
 }
