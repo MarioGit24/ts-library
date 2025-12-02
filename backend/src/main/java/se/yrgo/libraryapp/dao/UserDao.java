@@ -1,10 +1,6 @@
 package se.yrgo.libraryapp.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.sql.DataSource;
@@ -58,13 +54,7 @@ public class UserDao {
         return Optional.empty();
     }
 
-    public boolean register(String name, String realname, String password) {
-        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder();
-        String passwordHash = encoder.encode(password);
-
-        // handle names like Ian O'Toole
-        realname = realname.replace("'", "\\'");
-
+    public boolean register(String name, String realname, String passwordHash) {
         try (Connection conn = ds.getConnection()) {
             conn.setAutoCommit(false);
 
@@ -74,6 +64,7 @@ public class UserDao {
             return false;
         }
     }
+
 
     public boolean isNameAvailable(String name) {
         if (name == null || name.trim().length() < 3) {
@@ -131,6 +122,19 @@ public class UserDao {
 
         try (Statement stmt = conn.createStatement()) {
             return stmt.executeUpdate(insertRole) == 1;
+        }
+    }
+    public boolean isNameAvilable(String name) {
+        String query = "SELECT id FROM user WHERE user = ?";
+        try (Connection conn = ds.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, name);
+            try (ResultSet rs = ps.executeQuery()) {
+                return !rs.next();
+            }
+        } catch (SQLException ex) {
+            logger.error("Unable to lookup user name " + name, ex);
+            return false;
         }
     }
 }
