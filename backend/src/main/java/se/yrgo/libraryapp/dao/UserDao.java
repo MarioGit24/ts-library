@@ -65,23 +65,6 @@ public class UserDao {
     }
 
 
-    public boolean isNameAvailable(String name) {
-        if (name == null || name.trim().length() < 3) {
-            return false;
-        }
-
-        String query = "SELECT id FROM user WHERE user = ?";
-        try (Connection conn = ds.getConnection();
-                PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, name);
-            try (ResultSet rs = ps.executeQuery()) {
-                return !rs.next();
-            }
-        } catch (SQLException ex) {
-            logger.error("Unable to lookup user name " + name, ex);
-            return false;
-        }
-    }
 
     private boolean insertUserAndRole(String name, String realname, String passwordHash,
             Connection conn) throws SQLException {
@@ -123,6 +106,7 @@ public class UserDao {
             return stmt.executeUpdate(insertRole) == 1;
         }
     }
+
     public boolean isNameAvilable(String name) {
         String query = "SELECT id FROM user WHERE user = ?";
         try (Connection conn = ds.getConnection();
