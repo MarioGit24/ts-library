@@ -4,11 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedConstruction;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import se.yrgo.libraryapp.dao.UserDao;
 import se.yrgo.libraryapp.entities.LoginInfo;
@@ -16,6 +14,7 @@ import se.yrgo.libraryapp.entities.UserId;
 
 import java.util.Optional;
 
+import static java.text.DateFormatSymbols.getInstance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -34,20 +33,19 @@ public class UserServiceTest {
     private PasswordEncoder encoder;
 
     @Test
-    @SuppressWarnings("deprecation")
     void correctLogin() {
-        final String userId = "1";
-        final UserId id = UserId.of(userId);
-        final String username = "testuser";
-        final String password = "password";
-        final String passwordHash = "password";
-        final LoginInfo info = new LoginInfo(id, passwordHash);
-        final PasswordEncoder encoder =
-                org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
+        String username = "testuser";
+        String password = "password";
+        String passwordHash = "hashedPassword";
+        UserId id = UserId.of("1");
+        LoginInfo info = new LoginInfo(id, passwordHash);
+
         when(userDao.getLoginInfo(username)).thenReturn(Optional.of(info));
-        UserService userService = new UserService(userDao, encoder);
-        assertThat(userService.validate(username,
-                password)).isEqualTo(Optional.of(id));
+        when(encoder.matches(password, passwordHash)).thenReturn(true);
+
+        Optional<UserId> result = userService.validate(username, password);
+
+        assertThat(result).isEqualTo(Optional.of(id));
     }
 
     @Test

@@ -2,6 +2,8 @@ package se.yrgo.libraryapp.services;
 
 import java.util.Optional;
 import javax.inject.Inject;
+
+import org.pac4j.core.credentials.password.PasswordEncoder;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import se.yrgo.libraryapp.dao.UserDao;
 import se.yrgo.libraryapp.entities.*;
@@ -9,9 +11,10 @@ import se.yrgo.libraryapp.entities.*;
 
 public class UserService {
     private UserDao userDao;
+    private PasswordEncoder encoder;
 
     @Inject
-    UserService(UserDao userDao) {
+    UserService(UserDao userDao, org.springframework.security.crypto.password.PasswordEncoder encoder) {
         this.userDao = userDao;
     }
 
